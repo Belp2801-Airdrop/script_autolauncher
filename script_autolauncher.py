@@ -21,31 +21,31 @@ class ScriptAutoLauncher(customtkinter.CTk):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure((0, 1), weight=1)
 
-        self.init_constant()
+        self.init_constants()
         self.init_data()
-        self.init_var()
-        self.init_ctk_var()
+        self.init_vars()
+        self.init_ctk_vars()
 
         self.build_widgets()
         self.countdown()
 
     # region init
-    def init_constant(self):
+    def init_constants(self):
         self.scripts_filename = "scripts.csv"
-        self.lastest_running_time_filename = "lastest_running_time.csv"
+        self.latest_running_time_filename = "latest_running_time.csv"
 
         self.time_gap = 5
         self.page_size = 15
 
     def init_data(self):
         self.load_scripts_data()
-        self.load_lastest_running_time()
+        self.load_latest_running_time()
 
         # init data
         self.data = {}
         for script in self.scripts.keys():
             self.data[script] = {
-                "start_time": float(self.lastest_running_time[script]),
+                "start_time": float(self.latest_running_time[script]),
                 "success_count": 0,
                 "wait_time": int(self.scripts[script]["wait_time"]),
             }
@@ -54,7 +54,7 @@ class ScriptAutoLauncher(customtkinter.CTk):
                 time.time() - self.data[script]["start_time"]
             )
 
-        self.save_lastest_running_time()
+        self.save_latest_running_time()()
 
     def load_scripts_data(self):
         self.scripts = {}
@@ -66,31 +66,31 @@ class ScriptAutoLauncher(customtkinter.CTk):
                     line["wait_time"] = (float(line["cycle"]) * 60 + self.time_gap) * 60
                     self.scripts[line["name"]] = line
 
-    def load_lastest_running_time(self):
-        self.lastest_running_time = {}
-        if not os.path.exists(self.lastest_running_time_filename):
-            with open(self.lastest_running_time_filename, mode="w", newline="") as file:
+    def load_latest_running_time(self):
+        self.latest_running_time = {}
+        if not os.path.exists(self.latest_running_time_filename):
+            with open(self.latest_running_time_filename, mode="w", newline="") as file:
                 writer = csv.writer(file)
                 writer.writerow(["key"])
                 writer.writerow(["value"])
 
         try:
-            with open(self.lastest_running_time_filename, "r") as f:
+            with open(self.latest_running_time_filename, "r") as f:
                 reader = csv.DictReader(f)
                 row = next(reader)
-                self.lastest_running_time = row
+                self.latest_running_time = row
         except:
             pass
 
         for script in self.scripts.keys():
-            if script not in self.lastest_running_time:
-                self.lastest_running_time[script] = time.time()
+            if script not in self.latest_running_time:
+                self.latest_running_time[script] = time.time()
 
-    def init_var(self):
+    def init_vars(self):
         self.time_var = {}
         self.success_count_var = {}
 
-    def init_ctk_var(self):
+    def init_ctk_vars(self):
         self.script_var = customtkinter.StringVar()
         for script in self.scripts.keys():
             self.time_var[script] = customtkinter.StringVar()
@@ -287,11 +287,11 @@ class ScriptAutoLauncher(customtkinter.CTk):
 
             return f"{hours:02}:{minutes:02}"
 
-    def save_lastest_running_time(self):
+    def save_latest_running_time(self):
         values = {
             key: inner_dict["start_time"] for key, inner_dict in self.data.items()
         }
-        with open(self.lastest_running_time_filename, "w", newline="") as f:
+        with open(self.latest_running_time_filename, "w", newline="") as f:
             writer = csv.writer(f)
 
             writer.writerow(values.keys())
@@ -303,14 +303,14 @@ class ScriptAutoLauncher(customtkinter.CTk):
             _script["start_time"] = time.time()
             _script["remain_time"] = _script["wait_time"]
             self.time_var[script].set(self.format_time(_script["remain_time"]))
-        self.save_lastest_running_time()
+        self.save_latest_running_time()
 
     def reset_time(self, script):
         _script = self.data[script]
         _script["start_time"] = time.time()
         _script["remain_time"] = _script["wait_time"]
         self.time_var[script].set(self.format_time(_script["remain_time"]))
-        self.save_lastest_running_time()
+        self.save_latest_running_time()
 
     def countdown(self):
         current_time = time.time()
@@ -326,8 +326,8 @@ class ScriptAutoLauncher(customtkinter.CTk):
 
                 print("Run:", script)
 
-                # Update lastest_running_time.csv
-                self.save_lastest_running_time()
+                # Update latest_running_time.csv
+                self.save_latest_running_time()
 
                 # Run
                 self.run(script)
