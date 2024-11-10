@@ -54,7 +54,7 @@ class ScriptAutoLauncher(customtkinter.CTk):
                 time.time() - self.data[script]["start_time"]
             )
 
-        self.save_latest_running_time()()
+        self.save_latest_running_time()
 
     def load_scripts_data(self):
         self.scripts = {}
