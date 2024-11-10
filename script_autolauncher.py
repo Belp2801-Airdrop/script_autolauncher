@@ -1,6 +1,3 @@
-#!C:\Users\PC\anaconda3\python.exe
-
-
 """
 Name: Script Autolauncher
 Description: ...
