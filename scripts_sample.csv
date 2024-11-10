@@ -1,0 +1,7 @@
+index,name,command,file,cycle,is_end
+0,script_1,python,E:\Tools\web3_projects_private\manager.py,24,0
+1,script_2,py,D:\path\to\script_2,24,0
+2,script_3,py,D:\path\to\script_3,24,0
+3,script_4,py,D:\path\to\script_4,24,0
+4,script_5,py,D:\path\to\script_5,24,0
+5,script_6,py,D:\path\to\script_6,24,0
